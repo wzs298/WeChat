@@ -1,6 +1,5 @@
 package demo.servlet;
 
-import demo.entity.AppKeyDataEntity;
 import demo.process.HttpRequestUtilProcess;
 import demo.process.WechatProcess;
 import org.json.JSONException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,16 +22,12 @@ import java.util.TimerTask;
  */
 public class WechatServlet extends HttpServlet {
 
-	static String ACCESS_TOKEN = "";
+//	static String ACCESS_TOKEN = "";
 	public void init(ServletConfig config) throws ServletException {
 		String APPID = "wx709923cfd11f614e";//应用ID
 		String APPSECRET = "e1c5de479029d6827fe2782b81172923";//应用密钥
 		int EXPIRES = 7200;//定时器时间，单位：秒
 		final String getTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APPID + "&secret=" + APPSECRET;
-		String createUrl = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + ACCESS_TOKEN;
-		String getMenuUrl = "https://api.weixin.qq.com/cgi-bin/menu/get?access_token=" + ACCESS_TOKEN;
-		String delMenuUrl = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=" + ACCESS_TOKEN;
-
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			public void run() {
@@ -42,10 +36,8 @@ public class WechatServlet extends HttpServlet {
 				if(access_token != null && !"".equals(access_token)){
 					try {
 						JSONObject obj = new JSONObject(access_token);
-						ACCESS_TOKEN = obj.getString("access_token");
-						AppKeyDataEntity app = new AppKeyDataEntity();
-						app.setTOKEN(ACCESS_TOKEN);
-						System.out.println(new Date() + ":" +ACCESS_TOKEN);
+						new WechatProcess().setTOKEN(obj.getString("access_token"));
+						System.out.println(obj.getString("access_token"));
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -53,7 +45,7 @@ public class WechatServlet extends HttpServlet {
 					System.out.println("获取ACCESS_TOKEN失败");
 				}
 			}
-		}, 1000, EXPIRES*1000);
+		}, 0, EXPIRES * 1000);
 
 	}
 

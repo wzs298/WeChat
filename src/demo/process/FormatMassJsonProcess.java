@@ -11,7 +11,7 @@ import org.json.JSONObject;
  */
 public class FormatMassJsonProcess {
     /*
-     * 上传下载图文消息
+     * 上传、下载图文消息
      */
     public String mediaUpdata(MediaUpdataEntity[] ob){
         JSONObject json = new JSONObject();
